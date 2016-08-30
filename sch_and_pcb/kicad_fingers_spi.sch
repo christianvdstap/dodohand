@@ -130,10 +130,10 @@ OUT1
 Text Label 5100 6500 0    60   ~ 0
 OUT2
 $Comp
-L LIN_REG U4
+L LIN_REG U5
 U 1 1 57C29310
 P 1200 4650
-F 0 "U4" H 1800 4300 60  0000 C CNN
+F 0 "U5" H 1800 4300 60  0000 C CNN
 F 1 "LM3940" H 1700 4800 60  0000 C CNN
 F 2 "" H 1200 4650 60  0000 C CNN
 F 3 "" H 1200 4650 60  0000 C CNN
@@ -369,7 +369,7 @@ F 3 "" H 5950 6750 50  0000 C CNN
 	1    5950 6750
 	0    -1   -1   0   
 $EndComp
-Text Notes 650  10800 0    118  ~ 24
+Text Notes 9800 9750 0    118  ~ 24
 The board is meant to be created twice, one for the left hand\nand one for the right hand. Right hand will use he board flipped!\n- Only use top or bottom components, not both.\n- Either use the teensy or the regulator.\n\nInternal connectors are not meant to be hotplugged,\nYou run the risk to toast the chips.
 $Comp
 L RF5S A1
@@ -726,15 +726,15 @@ NoConn ~ 5250 3250
 $Comp
 L RR8 RR2
 U 1 1 57D44302
-P 8750 7150
-F 0 "RR2" H 8800 7700 50  0000 C CNN
-F 1 "1M" V 8780 7150 50  0000 C CNN
-F 2 "" H 8750 7150 50  0000 C CNN
-F 3 "" H 8750 7150 50  0000 C CNN
-	1    8750 7150
+P 8950 8450
+F 0 "RR2" H 9000 9000 50  0000 C CNN
+F 1 "1M" V 8980 8450 50  0000 C CNN
+F 2 "" H 8950 8450 50  0000 C CNN
+F 3 "" H 8950 8450 50  0000 C CNN
+	1    8950 8450
 	0    -1   -1   0   
 $EndComp
-Text Notes 6900 7400 0    60   ~ 0
+Text Notes 7100 8700 0    60   ~ 0
 SPI SS pullup, this makes\nsure that no SPI device is\nenabled when there is no \nsignal is on the wires.
 $Comp
 L GND #PWR018
@@ -967,18 +967,18 @@ Text Label 6450 7900 0    60   ~ 0
 IN0
 Text Label 6450 8000 0    60   ~ 0
 IN1
-Text Label 5300 9150 1    60   ~ 0
+Text Label 5500 10450 1    60   ~ 0
 SS3-A
-Text Label 5400 9150 1    60   ~ 0
+Text Label 6000 10450 1    60   ~ 0
 SS4-A
-Text Label 5500 9150 1    60   ~ 0
+Text Label 6500 10450 1    60   ~ 0
 SS5-A
 Entry Wire Line
-	5200 9250 5300 9150
+	5100 10550 5200 10450
 Entry Wire Line
-	5300 9250 5400 9150
+	5400 10550 5500 10450
 Entry Wire Line
-	5400 9250 5500 9150
+	5900 10550 6000 10450
 Text Label 5200 8100 0    60   ~ 0
 IO0
 Text Label 5200 8200 0    60   ~ 0
@@ -1018,8 +1018,8 @@ Entry Wire Line
 Entry Wire Line
 	11950 1100 12050 1200
 Entry Wire Line
-	5500 9250 5600 9150
-Text Label 5600 9150 1    60   ~ 0
+	6400 10550 6500 10450
+Text Label 7000 10450 1    60   ~ 0
 SS6-A
 Text Label 6900 5150 0    60   ~ 0
 OUT0
@@ -1139,28 +1139,28 @@ Power connectors
 $Comp
 L 8PIN_CONN J7
 U 1 1 57DB803D
-P 7600 7800
-F 0 "J7" H 8050 7900 60  0000 C CNN
-F 1 "8PIN_CONN" H 8050 7400 60  0000 C CNN
-F 2 "" H 7600 7800 60  0000 C CNN
-F 3 "" H 7600 7800 60  0000 C CNN
-	1    7600 7800
+P 7800 9100
+F 0 "J7" H 8250 9200 60  0000 C CNN
+F 1 "8PIN_CONN" H 8250 8700 60  0000 C CNN
+F 2 "" H 7800 9100 60  0000 C CNN
+F 3 "" H 7800 9100 60  0000 C CNN
+	1    7800 9100
 	1    0    0    -1  
 $EndComp
 $Comp
 L 8PIN_CONN J8
 U 1 1 57DB8043
-P 7600 8550
-F 0 "J8" H 8050 8650 60  0000 C CNN
-F 1 "8PIN_CONN" H 8050 8150 60  0000 C CNN
-F 2 "" H 7600 8550 60  0000 C CNN
-F 3 "" H 7600 8550 60  0000 C CNN
-	1    7600 8550
+P 7800 9850
+F 0 "J8" H 8250 9950 60  0000 C CNN
+F 1 "8PIN_CONN" H 8250 9450 60  0000 C CNN
+F 2 "" H 7800 9850 60  0000 C CNN
+F 3 "" H 7800 9850 60  0000 C CNN
+	1    7800 9850
 	1    0    0    -1  
 $EndComp
-Text Notes 8100 8050 1    60   ~ 0
+Text Notes 8300 9350 1    60   ~ 0
 Top
-Text Notes 8100 8850 1    60   ~ 0
+Text Notes 8300 10150 1    60   ~ 0
 Bottom
 Text Label 6400 6000 0    60   ~ 0
 OUT0
@@ -1169,58 +1169,58 @@ OUT1
 Text Label 6400 6500 0    60   ~ 0
 OUT2
 Entry Wire Line
-	7100 9250 7200 9150
+	7300 10550 7400 10450
 Entry Wire Line
-	7200 9250 7300 9150
+	7400 10550 7500 10450
 Entry Wire Line
-	7300 9250 7400 9150
+	7500 10550 7600 10450
 Entry Wire Line
-	7400 9250 7500 9150
+	7600 10550 7700 10450
 Entry Wire Line
-	8500 9250 8600 9150
+	8700 10550 8800 10450
 Entry Wire Line
-	8600 9250 8700 9150
+	8800 10550 8900 10450
 Entry Wire Line
-	8700 9250 8800 9150
+	8900 10550 9000 10450
 Entry Wire Line
-	8800 9250 8900 9150
-Text Label 7200 9100 1    60   ~ 0
+	9000 10550 9100 10450
+Text Label 7400 10400 1    60   ~ 0
 MOSI-A
-Text Label 7300 9100 1    60   ~ 0
+Text Label 7500 10400 1    60   ~ 0
 MISO-A
-Text Label 7400 9100 1    60   ~ 0
+Text Label 7600 10400 1    60   ~ 0
 SCLK-A
-Text Label 7500 9100 1    60   ~ 0
+Text Label 7700 10400 1    60   ~ 0
 SS2-A
-Text Label 8600 9100 1    60   ~ 0
+Text Label 8800 10400 1    60   ~ 0
 SS3-A
-Text Label 8700 9100 1    60   ~ 0
+Text Label 8900 10400 1    60   ~ 0
 SS4-A
-Text Label 8800 9100 1    60   ~ 0
+Text Label 9000 10400 1    60   ~ 0
 SS5-A
-Text Label 8900 9100 1    60   ~ 0
+Text Label 9100 10400 1    60   ~ 0
 SS6-A
 Entry Wire Line
-	8900 9250 9000 9150
+	9100 10550 9200 10450
 Entry Wire Line
-	9000 9250 9100 9150
+	9200 10550 9300 10450
 $Comp
 L +3.3V #PWR026
 U 1 1 57DC4406
-P 8100 7500
-F 0 "#PWR026" H 8100 7350 50  0001 C CNN
-F 1 "+3.3V" H 8100 7640 50  0000 C CNN
-F 2 "" H 8100 7500 50  0000 C CNN
-F 3 "" H 8100 7500 50  0000 C CNN
-	1    8100 7500
+P 8300 8800
+F 0 "#PWR026" H 8300 8650 50  0001 C CNN
+F 1 "+3.3V" H 8300 8940 50  0000 C CNN
+F 2 "" H 8300 8800 50  0000 C CNN
+F 3 "" H 8300 8800 50  0000 C CNN
+	1    8300 8800
 	1    0    0    -1  
 $EndComp
-NoConn ~ 8400 7500
-Text Label 9000 9100 1    60   ~ 0
+NoConn ~ 8600 8800
+Text Label 9200 10400 1    60   ~ 0
 SS0-A
-Text Label 9100 9100 1    60   ~ 0
+Text Label 9300 10400 1    60   ~ 0
 SS1-A
-Text Notes 7100 9400 0    60   ~ 0
+Text Notes 7300 10700 0    60   ~ 0
 SPI Expansion connectors for SS3 upto SS6
 Text Notes 5500 6650 0    60   ~ 0
 Input pull down
@@ -1768,7 +1768,7 @@ Wire Wire Line
 Wire Wire Line
 	5000 6500 6650 6500
 Wire Bus Line
-	3100 1350 3100 9250
+	3100 1350 3100 10550
 Wire Wire Line
 	3600 2200 3200 2200
 Wire Wire Line
@@ -1910,22 +1910,6 @@ Wire Wire Line
 Wire Wire Line
 	5500 7100 5400 7100
 Wire Wire Line
-	5100 8800 5300 8800
-Wire Wire Line
-	5300 8800 5300 9150
-Wire Wire Line
-	5100 8700 5400 8700
-Wire Wire Line
-	5400 8700 5400 9150
-Wire Wire Line
-	5100 8600 5500 8600
-Wire Wire Line
-	5500 8600 5500 9150
-Wire Wire Line
-	5100 8500 5600 8500
-Wire Bus Line
-	3100 9250 9000 9250
-Wire Wire Line
 	5100 8100 6650 8100
 Wire Wire Line
 	5100 8200 6650 8200
@@ -1933,8 +1917,6 @@ Wire Wire Line
 	5100 8300 6650 8300
 Wire Notes Line
 	6700 750  6700 6250
-Wire Wire Line
-	5600 8500 5600 9150
 Wire Bus Line
 	6750 600  6750 8300
 Wire Notes Line
@@ -1990,76 +1972,76 @@ Connection ~ 1500 6750
 Connection ~ 1500 7300
 Connection ~ 1500 7850
 Wire Wire Line
-	7600 8100 7500 8100
+	7800 9400 7700 9400
 Wire Wire Line
-	7500 8100 7500 9150
+	7700 9400 7700 10450
 Wire Wire Line
-	7400 8000 7400 9150
+	7600 9300 7600 10450
 Wire Wire Line
-	7400 8000 7600 8000
+	7600 9300 7800 9300
 Wire Wire Line
-	7300 7900 7300 9150
+	7500 9200 7500 10450
 Wire Wire Line
-	7300 7900 7600 7900
+	7500 9200 7800 9200
 Wire Wire Line
-	7600 7800 7200 7800
+	7800 9100 7400 9100
 Wire Wire Line
-	7200 7800 7200 9150
+	7400 9100 7400 10450
 Wire Wire Line
-	7600 8550 7200 8550
-Connection ~ 7200 8550
+	7800 9850 7400 9850
+Connection ~ 7400 9850
 Wire Wire Line
-	7600 8650 7300 8650
-Connection ~ 7300 8650
+	7800 9950 7500 9950
+Connection ~ 7500 9950
 Wire Wire Line
-	7600 8750 7400 8750
-Connection ~ 7400 8750
+	7800 10050 7600 10050
+Connection ~ 7600 10050
 Wire Wire Line
-	7600 8850 7500 8850
-Connection ~ 7500 8850
+	7800 10150 7700 10150
+Connection ~ 7700 10150
 Wire Wire Line
-	8500 8100 8600 8100
+	8700 9400 8800 9400
 Wire Wire Line
-	8600 7500 8600 9150
+	8800 8800 8800 10450
 Wire Wire Line
-	8700 7500 8700 9150
+	8900 8800 8900 10450
 Wire Wire Line
-	8700 8000 8500 8000
+	8900 9300 8700 9300
 Wire Wire Line
-	8800 7500 8800 9150
+	9000 8800 9000 10450
 Wire Wire Line
-	8800 7900 8500 7900
+	9000 9200 8700 9200
 Wire Wire Line
-	8900 7500 8900 9150
+	9100 8800 9100 10450
 Wire Wire Line
-	8900 7800 8500 7800
+	9100 9100 8700 9100
 Wire Wire Line
-	8500 8550 8900 8550
-Connection ~ 8900 8550
+	8700 9850 9100 9850
+Connection ~ 9100 9850
 Wire Wire Line
-	8500 8650 8800 8650
-Connection ~ 8800 8650
+	8700 9950 9000 9950
+Connection ~ 9000 9950
 Wire Wire Line
-	8500 8750 8700 8750
-Connection ~ 8700 8750
+	8700 10050 8900 10050
+Connection ~ 8900 10050
 Wire Wire Line
-	8500 8850 8600 8850
-Connection ~ 8600 8850
-Connection ~ 8900 7800
-Connection ~ 8800 7900
-Connection ~ 8700 8000
-Connection ~ 8600 8100
+	8700 10150 8800 10150
+Connection ~ 8800 10150
+Connection ~ 9100 9100
+Connection ~ 9000 9200
+Connection ~ 8900 9300
+Connection ~ 8800 9400
 Wire Wire Line
-	7500 8350 8500 8350
+	7700 9650 8700 9650
 Wire Wire Line
-	8500 8350 8500 7500
-Connection ~ 7500 8350
+	8700 9650 8700 8800
+Connection ~ 7700 9650
 Wire Wire Line
-	9000 9150 9000 7500
+	9200 10450 9200 8800
 Wire Wire Line
-	9100 9150 9100 7500
+	9300 10450 9300 8800
 Wire Wire Line
-	8100 7500 8300 7500
+	8300 8800 8500 8800
 Wire Wire Line
 	6850 6550 9600 6550
 Wire Wire Line
@@ -2171,4 +2153,109 @@ Connection ~ 1200 4650
 Connection ~ 2200 4650
 Connection ~ 1750 2300
 Connection ~ 5050 4400
+Text Label 5200 8800 0    60   ~ 0
+SS3-A
+Text Label 5200 8700 0    60   ~ 0
+SS4-A
+Text Label 5200 8600 0    60   ~ 0
+SS5-A
+Text Label 5200 8500 0    60   ~ 0
+SS6-A
+Text Label 5200 10450 1    60   ~ 0
+SS1-A
+Entry Wire Line
+	6900 10550 7000 10450
+Wire Wire Line
+	5500 10450 5500 10200
+Wire Wire Line
+	6000 10200 6000 10450
+Wire Wire Line
+	6500 10450 6500 10200
+Wire Wire Line
+	7000 10450 7000 10200
+Wire Bus Line
+	3100 10550 9200 10550
+Text Notes 3350 9550 0    60   ~ 0
+An additional buffer gate to be able to\ndeselect the secundary SPI devices\nwith SS1-A
+$Comp
+L 74LS126 U4
+U 1 1 57DE24BE
+P 5500 9750
+F 0 "U4" H 5600 9950 50  0000 C CNN
+F 1 "74LS126" H 5750 9600 50  0000 C CNN
+F 2 "" H 5500 9750 50  0000 C CNN
+F 3 "" H 5500 9750 50  0000 C CNN
+	1    5500 9750
+	0    1    1    0   
+$EndComp
+$Comp
+L 74LS126 U4
+U 2 1 57DE290A
+P 6000 9750
+F 0 "U4" H 6100 9950 50  0000 C CNN
+F 1 "74LS126" H 6250 9600 50  0000 C CNN
+F 2 "" H 6000 9750 50  0000 C CNN
+F 3 "" H 6000 9750 50  0000 C CNN
+	2    6000 9750
+	0    1    1    0   
+$EndComp
+$Comp
+L 74LS126 U4
+U 3 1 57DE29BF
+P 6500 9750
+F 0 "U4" H 6600 9950 50  0000 C CNN
+F 1 "74LS126" H 6750 9600 50  0000 C CNN
+F 2 "" H 6500 9750 50  0000 C CNN
+F 3 "" H 6500 9750 50  0000 C CNN
+	3    6500 9750
+	0    1    1    0   
+$EndComp
+$Comp
+L 74LS126 U4
+U 4 1 57DE2BC9
+P 7000 9750
+F 0 "U4" H 7100 9950 50  0000 C CNN
+F 1 "74LS126" H 7250 9600 50  0000 C CNN
+F 2 "" H 7000 9750 50  0000 C CNN
+F 3 "" H 7000 9750 50  0000 C CNN
+	4    7000 9750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5200 9200 5200 10450
+Wire Wire Line
+	5200 9200 6700 9200
+Wire Wire Line
+	6700 9200 6700 9750
+Connection ~ 5200 9750
+Wire Wire Line
+	5700 9750 5700 9200
+Connection ~ 5700 9200
+Wire Wire Line
+	6200 9750 6200 9200
+Connection ~ 6200 9200
+Wire Wire Line
+	5100 8800 5500 8800
+Wire Wire Line
+	5500 8800 5500 9300
+Wire Wire Line
+	5100 8700 6000 8700
+Wire Wire Line
+	6000 8700 6000 9300
+Wire Wire Line
+	5100 8600 6500 8600
+Wire Wire Line
+	6500 8600 6500 9300
+Wire Wire Line
+	7000 9300 7000 8500
+Wire Wire Line
+	7000 8500 5100 8500
+Text Notes 5300 10200 1    60   ~ 0
+74HC126
+Text Notes 6800 10250 1    60   ~ 0
+74HC126
+Text Notes 5800 10250 1    60   ~ 0
+74HC126
+Text Notes 6300 10250 1    60   ~ 0
+74HC126
 $EndSCHEMATC
