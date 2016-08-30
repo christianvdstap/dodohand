@@ -1,5 +1,20 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP 74AHC1G17
+D inverting buffer with Schmitt trigger.
+F 74xx/74ahc_ahct1g14.pdf
+$ENDCMP
+#
+$CMP 74LS165
+D Shift Register 8 bits, parallel load
+K TTL SR SR8
+$ENDCMP
+#
+$CMP 74LV165A
+D Shift Register 8 bits, parallel load
+K TTL SR SR8
+$ENDCMP
+#
 $CMP 7SEGM
 D Afficheur Leds 7 segments
 K DEV
@@ -179,6 +194,10 @@ $CMP SCR
 D Thyristor
 $ENDCMP
 #
+$CMP SN74LVC1G125
+D Single Bus Buffer Gate With 3-State Output
+$ENDCMP
+#
 $CMP SPST
 D Interrupteur simple
 K switch
@@ -212,6 +231,14 @@ $ENDCMP
 $CMP VR
 D VARISTANCE
 K VR  DEV
+$ENDCMP
+#
+$CMP XRA1402
+D 8Bit GPIO with 5V tolerant inputs
+$ENDCMP
+#
+$CMP XRA1404
+D 8Bit GPIO with 5V tolerant inputs
 $ENDCMP
 #
 $CMP ZENER
