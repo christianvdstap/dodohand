@@ -23,6 +23,7 @@
 include <utility.scad>
 include <lib.h.scad>
 include <finger.h.scad>
+include <pcb.scad>
 include <finger_pcbInfo.scad>
 
 module finger_pcb_comb(pcb) {
@@ -44,20 +45,8 @@ module finger_pcb_comb(pcb) {
 	downLedOffset = finger_placement_getDownLedOffset(placement);
 	originOffset = finger_placement_getOriginOffset(placement);
 
-	ledLeadDistance = led_pair_getLeadDistance(ledPair);
-
 	points = finger_pcbInfo_getPoints(pcbInfo);
 	holesM3 = finger_pcbInfo_getMountHoleLocations(pcbInfo);
-
-	module viasLedPair() {
-		viaOffset = ledLeadDistance / 2;
-		viaGapOffset = ledGapDistance / 2;
-		
-		mirror2([1, 0, 0])
-			mirror2([0, 1, 0]) 
-				translate([viaGapOffset, viaOffset, 0])
-					circle(r = rVia);
-	}
 
 	intersection() {
 		difference() {
@@ -82,9 +71,9 @@ module finger_pcb_comb(pcb) {
 					rotate([0, 0, finger_vector_get(angles, i)]) {
 						symmetric(4)
 							translate([0, sideLedOffset, 0])
-								viasLedPair();
+								viasLedPair2D(constants, ledPair, ledGapDistance);
 						translate([0, downLedOffset, 0])
-							viasLedPair();
+							viasLedPair2D(constants, ledPair, ledGapDistance);
 					}
 			}
 		}

@@ -30,7 +30,7 @@ finger_index = 0;
 finger_middle = 1;
 finger_ring = 2;
 finger_pinkie = 3;
-finger_fingers = [0, 1, 2, 3];
+finger_fingers = [finger_index, finger_middle, finger_ring, finger_pinkie];
 
 // Constructor
 function finger_vector(indexValue, middleValue, ringValue, pinkieValue) =
@@ -415,8 +415,8 @@ function finger_centerHammer_calcMaxLeverAngle(this) =
 		
 		r = dLever/2,
 		h = hAnvil - hFloor - r,
-		q = math_pythagoras(a = hBody, b = r),
-		x = math_pythagoras(b = h, h = q),
+		q = pythagoras(a = hBody, b = r),
+		x = pythagoras(b = h, h = q),
 		A = atan(h/x),
 		B = acos(hBody/q))
 	A - B;

@@ -19,21 +19,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// This is the tests scad file, used for rendering parts while developing
-include <lib.scad>
-include <finger_guard.scad>
-include <finger_pcb.scad>
-include <axle.scad>
-include <finger_lever.scad>
-include <finger_carrier.scad>
-include <finger_centerKey.scad>
-include <finger.scad>
-include <thumb_pcb.scad>
-include <thumb_carrier.scad>
-include <thumb.scad>
+// This is the pcb scad file containing PCB utility modules.
+include <utility.scad>
+include <lib.h.scad>
+include <led.h.scad>
 
-$fn=32;
-
-//finger_assy(lib_fingerPcb, lib_finger_carrier, lib_guard);
-//finger_single_assy(lib_finger_carrier,  ["up", "up", "down", "up", "down"]);
-thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, "up");
+module viasLedPair2D(constants, ledPair, ledGapDistance) {
+	leadDistance = led_pair_getLeadDistance(ledPair);
+	rVia = constants_getRVia(constants);
+	
+	viaOffset = leadDistance / 2;
+	viaGapOffset = ledGapDistance / 2;
+	
+	mirror2([1, 0, 0])
+		mirror2([0, 1, 0]) 
+			translate([viaGapOffset, viaOffset, 0])
+				circle(r = rVia);
+}

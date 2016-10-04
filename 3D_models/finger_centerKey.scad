@@ -76,7 +76,7 @@ module finger_centerKey_cap_comb(centerKeyCap) {
 	
 	rCircle = r * 5/3;
 
-	hIntersectOffset = math_pythagoras(h = rCircle, a = r);
+	hIntersectOffset = pythagoras(h = rCircle, a = r);
 	
 	translate([0, 0, t/2]) {
 		intersection() {

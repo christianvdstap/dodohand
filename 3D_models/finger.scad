@@ -26,11 +26,6 @@ include <finger_guard.scad>
 include <finger_pcb.scad>
 include <finger_carrier.scad>
 
-
-module finger_keyCap_part(){}
-module finger_centerKeyCap_part(){}
-module finger_centerHammer(){}
-
 module finger_assy(pcb, carrier, guard) {
 	placement = finger_carrier_getPlacement(carrier);
 	

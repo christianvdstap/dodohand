@@ -25,38 +25,11 @@ include <lib.h.scad>
 include <finger.h.scad>
 include <magnet.scad>
 include <led.scad>
+include <led_pair.scad>
 include <clip.scad>
 include <axle.scad>
 include <finger_lever.scad>
 include <finger_centerKey.scad>
-
-module finger_carrier_ledCut_comb(carrier) {
-	ledPair = finger_carrier_getLedPair(carrier);
-	h = finger_carrier_getH(carrier);
-
-	wLed = led_pair_getW(ledPair);
-	dLed = led_pair_getD(ledPair);
-	hLed = led_pair_getH(ledPair);
-	rLed = led_pair_getR(ledPair);
-	ledLeadFrontOffset = led_pair_getLeadFrontOffset(ledPair);
-	ledLensTopOffset = led_pair_getLensTopOffset(ledPair);
-	ledLeadDistance = led_pair_getLeadDistance(ledPair);
-	
-	translate([0, 0, -hLed/2 + ledLensTopOffset])
-		union() {
-			translate([dLed/2, 0, 0])
-				ccube([dLed, wLed, hLed]);
-			mirror2([0, 1, 0])
-				translate([ledLeadFrontOffset, ledLeadDistance/2, -h/2 + hLed/2]) {
-					ccylinder(r = dLed/4, h = h);
-					translate([dLed/4, 0, 0]) ccube([dLed/2, dLed/2, h]);
-				}
-			translate([0, 0, hLed/2 - ledLensTopOffset])
-				rotate([0, 90, 0])
-					ccylinder(r = rLed, h = dLed*2);
-			
-		}
-}
 
 module finger_carrier_downLed_place(carrier) {
 	placement = finger_carrier_getPlacement(carrier);
@@ -374,7 +347,7 @@ module finger_carrier_anvilDetailCut_comb(carrier) {
 		mirror2([1, 0, 0]) {
 			finger_carrier_downLed_place(carrier)
 				difference() {
-					finger_carrier_ledCut_comb(carrier);
+					led_pair_cut_comb(h, ledPair);
 					// Blockade the eye a little to compensate for the clip
 					translate([-leverClearance/2-rLed + clearance, 0, -rLed - clearance])
 						ccube([leverClearance, rLed*2, tClip*2]);
@@ -450,13 +423,14 @@ module finger_carrier_outerSideLedDetailCut_comb(carrier) {
 	hLed = led_pair_getH(ledPair);
 	lensTopOffset = led_pair_getLensTopOffset(ledPair);
 	
+	h = finger_carrier_getH(carrier);
 	outerCubeSide = finger_carrier_calcOuterCubeSide(carrier);
 	
 	symmetric(4)
 		mirror2([0, 1, 0])
 			finger_carrier_sideLed_place(carrier) {
 				rotate([0, 0, 90])
-					finger_carrier_ledCut_comb(carrier);
+					led_pair_cut_comb(h, ledPair);
 				translate([0, outerCubeSide/2, -hLed/2 + lensTopOffset])
 					ccube([wLed, outerCubeSide, hLed]);
 			}

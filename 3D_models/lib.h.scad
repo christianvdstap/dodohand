@@ -24,14 +24,15 @@ include <utility.scad>
 
 /* General constants that are used in many places. */
 // Constructor
-function constants(nozzleWidth, clearance, rInnerM3, rOuterM3, rEdgeRimR3, rVia) = [
-	e("nozzleWidth", nozzleWidth), e("clearance", clearance),
+function constants(nozzleWidth, clearance, rInnerM2, rInnerM3, rOuterM3, rEdgeRimR3, rVia) = [
+	e("nozzleWidth", nozzleWidth), e("clearance", clearance), e("rInnerM2", rInnerM2),
 	e("rInnerM3", rInnerM3), e("rOuterM3", rOuterM3), e("rEdgeRimM3", rEdgeRimM3),
 	e("rVia", rVia)];
 
 // Accessors
 function constants_getNozzleWidth(this) = get(this, "nozzleWidth");
 function constants_getClearance(this) = get(this, "clearance");
+function constants_getRInnerM2(this) = get(this, "rInnerM2");
 function constants_getRInnerM3(this) = get(this, "rInnerM3");
 function constants_getROuterM3(this) = get(this, "rOuterM3");
 function constants_getREdgeRimM3(this) = get(this, "rEdgeRimM3");

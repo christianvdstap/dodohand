@@ -19,21 +19,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// This is the tests scad file, used for rendering parts while developing
-include <lib.scad>
-include <finger_guard.scad>
-include <finger_pcb.scad>
-include <axle.scad>
-include <finger_lever.scad>
-include <finger_carrier.scad>
-include <finger_centerKey.scad>
-include <finger.scad>
-include <thumb_pcb.scad>
-include <thumb_carrier.scad>
-include <thumb.scad>
+// This is the math scad file that will contain math helper functions.
 
-$fn=32;
+function lineLength(p, q) = sqrt(pow(p[0]-q[0],2)+pow(p[1]-q[1],2));
 
-//finger_assy(lib_fingerPcb, lib_finger_carrier, lib_guard);
-//finger_single_assy(lib_finger_carrier,  ["up", "up", "down", "up", "down"]);
-thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, "up");
+function minAxis(points, axis, index) = 
+	index == len(points) - 1
+		? points[index][axis] 
+		: min(points[index][axis], minAxis(points, axis, index+1));
+
+function maxAxis(points, axis, index) = 
+	index == len(points) - 1
+		? points[index][axis] 
+		: max(points[index][axis], maxAxis(points, axis, index+1));
+
+function pythagoras(a,b,h) =
+	a == undef ? sqrt(h*h-b*b) : b == undef ? sqrt(h*h-a*a) : sqrt(a*a+b*b);
+	
+function triangleHeight(a,b,c) =
+	let(s=(a+b+c)/2)
+	2*sqrt(s*(s-a)*(s-b)*(s-c))/a;

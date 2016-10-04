@@ -18,22 +18,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// This is the thumb.scad file containing the modules to draw various thumb unit assemblies.
 
-// This is the tests scad file, used for rendering parts while developing
-include <lib.scad>
-include <finger_guard.scad>
-include <finger_pcb.scad>
-include <axle.scad>
-include <finger_lever.scad>
-include <finger_carrier.scad>
-include <finger_centerKey.scad>
-include <finger.scad>
+include <utility.scad>
 include <thumb_pcb.scad>
 include <thumb_carrier.scad>
-include <thumb.scad>
 
-$fn=32;
+module thumb_assy(pcb, downCarrier, downPosition = "up") {
+	hCarrier = thumb_downCarrier_getH(downCarrier);
 
-//finger_assy(lib_fingerPcb, lib_finger_carrier, lib_guard);
-//finger_single_assy(lib_finger_carrier,  ["up", "up", "down", "up", "down"]);
-thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, "up");
+	union() {
+		thumb_pcb_part(pcb, true);
+		translate([0, 0, hCarrier/2 + 0.01])
+			thumb_downCarrier_assy(downCarrier, downPosition);
+	}
+}
