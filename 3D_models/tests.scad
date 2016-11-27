@@ -1,4 +1,4 @@
-/*
+	/*
     This file is part of the DodoHand project. This project aims to create
     an open implementation of the DataHand keyboard, capable of being created
     with commercial 3D printing services.
@@ -21,19 +21,15 @@
 
 // This is the tests scad file, used for rendering parts while developing
 include <lib.scad>
-include <finger_guard.scad>
-include <finger_pcb.scad>
-include <axle.scad>
-include <finger_lever.scad>
-include <finger_carrier.scad>
-include <finger_centerKey.scad>
 include <finger.scad>
-include <thumb_pcb.scad>
-include <thumb_carrier.scad>
 include <thumb.scad>
+include <thumb_pcb.scad>
+include <thumb_side.scad>
+include <thumb_carrier.scad>
 
-$fn=32;
+$fn=64;
 
 //finger_assy(lib_fingerPcb, lib_finger_carrier, lib_guard);
 //finger_single_assy(lib_finger_carrier,  ["up", "up", "down", "up", "down"]);
-thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, "up");
+thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, lib_thumb_sideCarrier, "down",	thumb_vector("down", "down", "down", "down"));
+//thumb_pcb_fit_part(lib_thumb_pcb, true);

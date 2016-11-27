@@ -32,7 +32,7 @@ module thumb_carrier_base_comb(downCarrier) {
 	d = thumb_downCarrier_calcD(downCarrier);
 	h = thumb_downCarrier_getH(downCarrier);
 
-	translate([0, tHinge/2, 0])
+	translate([0, -tHinge/2, 0])
 		ccube([w, d, h]);
 }
 
@@ -74,13 +74,13 @@ module thumb_carrier_innerCut_comb(downCarrier, withClearance = false) {
 	difference() {
 		union() {
 			// Main shape
-			translate([0, tWall/2 + clearance/2, -tWall - clearance])
+			translate([0, -tWall/2 - clearance/2, -tWall - clearance])
 				ccube([w - tCarrierWall*2 - clearance*2, d - tHinge - tWall - clearance, h]);
 			// Holders for the hinge of the down key
-			translate([0, d/2 + tHinge/2 + clearance, 0])
+			translate([0, -d/2 - tHinge/2 - clearance, 0])
 				ccube([w*2, tHinge*2, h*3/2]);
 			// Attach hFloor below the hinge cut
-			translate([0, d/2, -h + hFloor - clearance])
+			translate([0, -d/2, -h + hFloor - clearance])
 				ccube([w - tCarrierWall*2 - clearance*2, tHinge*2, h]);
 		}
 		// Side cuts
@@ -88,7 +88,7 @@ module thumb_carrier_innerCut_comb(downCarrier, withClearance = false) {
 			translate([w/2 + ledGapDistance/2 - dLed + rLed - clearance, 0, -tRoof - clearance])
 				ccube([w, ledOffset*2 - wLed - tWall*2 + clearance*2, h*2]);
 		// Remove room for hinge
-		translate([0, d/2 + tHinge/2 - tWall, hFloor - clearance])
+		translate([0, -d/2 - tHinge/2 + tWall, hFloor - clearance])
 			difference() {		
 				translate([0, -clearance, 0])
 					ccube([wAxle + clearance*2, tHinge*2, h]);
@@ -120,15 +120,15 @@ module thumb_carrier_outerDetail_comb(downCarrier) {
 	axleTopOffset = thumb_downCarrier_calcAxleTopOffset(downCarrier);
 
 	union() {
-		translate([0, d/2 , 0])
+		translate([0, -d/2 , 0])
 			union() {
-				translate([0, tHinge/2 - clearance, 0]) 
+				translate([0, -tHinge/2 - clearance, 0]) 
 					ccube([wHinge + leverClearance*2, tHinge*2, h*2]);
 				translate([0, 0, -tWall])
 					ccube([wHinge + leverClearance*2, tHinge*2, h]);
 			}
 		thumb_carrier_leverGapCut_comb(downCarrier);
-		translate([0, d/2, h/2 - axleTopOffset])
+		translate([0, -d/2, h/2 - axleTopOffset])
 			rotate([0, 90, 0])
 				ccylinder(r = rAxle + clearance/2, h = w);
 	}
@@ -155,12 +155,11 @@ module thumb_carrier_leverGapCut_comb(downCarrier) {
 	dBar = thumb_downCarrier_calcDBar(downCarrier);
 	hammerOffset = thumb_downCarrier_calcHammerOffset(downCarrier);
 	
-	mirror([0, 1, 0])
-		translate([0, hammerOffset - tHinge, 0]) {
-			ccube([wBar - leverClearance*2, tHinge*2, h*2]);
-			translate([0, 0, -tRoof + clearance])
-				ccube([wBar, tHinge*2, h]);
-		}
+	translate([0, hammerOffset - tHinge, 0]) {
+		ccube([wBar - leverClearance*2, tHinge*2, h*2]);
+		translate([0, 0, -tRoof + clearance])
+			ccube([wBar, tHinge*2, h]);
+	}
 }
 
 module thumb_carrier_led_place(downCarrier) {
@@ -184,7 +183,6 @@ module thumb_carrier_innerDetail_comb(downCarrier) {
 	constants = thumb_downCarrier_getConstants(downCarrier);
 	downKey = thumb_downCarrier_getDownKey(downCarrier);
 	ledPair = thumb_downCarrier_getLedPair(downCarrier);
-//	placement = thumb_downCarrier_getPlacement(downCarrier);
 	sClip = thumb_downCarrier_getSClip(downCarrier);
 	magnet = thumb_downCarrier_getMagnet(downCarrier);
 
@@ -381,21 +379,18 @@ module thumb_downKey_base2d_comb(downCarrier) {
 	downKey = thumb_downCarrier_getDownKey(downCarrier);
 	points = thumb_downKey_getPoints(downKey);
 	
-	B = points[1];
 	C = points[2];
 	D = points[3];
 	E = points[4];
-	G = points[6];
 	
-	paramsA = triangleEllipseParameters(D, B, C);
-	paramsB = triangleEllipseParameters(D, G, E);
-	
-	rotate([0, 180, 0])
-		mirror([0, 1, 0]) {
-			polygon(points);
-			triangleEllipse(paramsA);
-			triangleEllipse(paramsB);
-		}	
+	rCD = thumb_downKey_getRCD(downKey);
+	rDE = thumb_downKey_getRDE(downKey);
+
+	union(){
+		polygon(points);
+		lens(C, D, rCD);
+		lens(D, E, rDE);
+	}	
 }
 
 module thumb_downKey_base_comb(downCarrier) {
@@ -403,7 +398,7 @@ module thumb_downKey_base_comb(downCarrier) {
 	h = thumb_downKey_getH(downKey);
 	tHinge = thumb_downKey_calcTHinge(downKey);
 	
-	translate([0, tHinge/2, 0])
+	translate([0, -tHinge/2, 0])
 		linear_extrude(height = h)
 			thumb_downKey_base2d_comb(downCarrier);
 }
@@ -418,9 +413,9 @@ module thumb_downKey_baseCut_comb(downCarrier) {
 	rotation = thumb_downCarrier_calcMaxRotation(downCarrier);
 
 	mirror2([1, 0, 0])
-		translate([0, -tHinge/2, 0])
-			rotate([rotation, 0, 0])
-				translate([wHinge, tHinge, -h/2])
+		translate([0, tHinge/2, 0])
+			rotate([-rotation, 0, 0])
+				translate([wHinge, -tHinge, -h/2])
 					ccube([wHinge, tHinge*2, h]);
 }
 
@@ -451,7 +446,7 @@ module thumb_downKey_hinge_comb(downCarrier) {
 				ccube([wHinge, tHinge, h + axleTopOffset + clearance], hCenter = true);
 				rotate([0, 90, 0])
 					ccylinder(r = rHinge, h = wHinge);
-				rotate([rotation, 0, 0])
+				rotate([-rotation, 0, 0])
 					translate([0, 0, - hLowerHinge/2])
 						ccube([wHinge, tHinge, hLowerHinge]);
 			}
@@ -482,7 +477,7 @@ module thumb_downKey_hammer_comb(downCarrier) {
 	hHammer = tRoof + travelDistance - rHinge + clearance;
 	wHammer = wBar - leverClearance*4;
 	
-	translate([0, -dCarrier/2 - hammerOffset + tHinge, -hHammer])
+	translate([0, dCarrier/2 + hammerOffset - tHinge, -hHammer])
 		union() {
 			ccube([wHammer, tHinge, h + hHammer], hCenter = true);
 			rotate([0, 90, 0]) ccylinder(r = rHinge, h = wHammer);
@@ -534,14 +529,14 @@ module thumb_downCarrier_assy(downCarrier, position = "up") {
 		thumb_carrier_inner_part(downCarrier, true);
 		translate([0, 0, -travelDistance])
 			thumb_bar_part(downCarrier, true);
-		translate([0, dCarrier/2, hCarrier/2 - axleTopOffset])
-			rotate([-rotation, 0, 0])
+		translate([0, -dCarrier/2, hCarrier/2 - axleTopOffset])
+			rotate([rotation, 0, 0])
 				thumb_downKey_part(lib_thumb_downCarrier, true);
-		translate([0, dCarrier/2, hCarrier/2 - axleTopOffset])
+		translate([0, -dCarrier/2, hCarrier/2 - axleTopOffset])
 			axle_part(axle);
 		mirror2([0, 1, 0])
 			thumb_carrier_led_place(downCarrier)
-				rotate([0,0,-90])
+				rotate([0, 0, -90])
 					led_assy(led, true);
 		mirror([1, 0, 0])
 			mirror2([0, 1, 0])

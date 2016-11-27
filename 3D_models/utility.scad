@@ -86,55 +86,26 @@ module ellipse(r1, r2) {
 		circle(r = 1);
 }
 
-// pq = base, pr = side to replace
-function triangleEllipseParameters(p,q,r) =
-	let(a=lineLength(p,q),
-		b=lineLength(p,r),
-		c=lineLength(q,r),
-		sma=triangleHeight(a,b,c),
-		sMa=pythagoras(a=sma,h=b),
-		x=a-sMa,
-		zx=q[0]-x/a*(q[0]-p[0]),
-		zy=q[1]-x/a*(q[1]-p[1]),
-		alpha=(r[0]-zx)/sma,
-		beta=alpha<-1?-1:alpha>1?1:alpha,
-		angle=acos(beta))
-	[[zx,zy],angle,sma,sMa,p,q,r];
-
-module triangleEllipse(params) {
+module lens(P, Q, r) {
+	s = lineLength(P, Q);
 	
-	Qx=params[0][0];
-	Qy=params[0][1];
-	angle=params[1];
-	sma=params[2];
-	sMa=params[3];
-	p=params[4];
-	q=params[5];
-	r=params[6];
+	A = [-s/2, 0];
+	B = [s/2, 0];
+	C1 = [0, r];
+	C2 = [0, -r];
 	
-//	echo();
-//	echo(params);
-//	echo(p,q,r,[Qx,Qy]);
-//	echo(angle, sma, sMa);
-
-	a=angle>90;
-	b=r[1]>p[1];
-	c=r[0]>Qy;
+	circle1 = circleFromPoints(A, C1, B);
+	circle2 = circleFromPoints(A, C2, B);
 	
+	PQ = pointBetween(P,Q);
+	angle = lineXRotation(P, Q);
 	
-	quad = 	(!a&&!b&&!c)||( a&& b&& c)?[ 1, 1, 0]:
-			(!a&&!b&& c)||( a&& b&&!c)?[-1, 1, 0]:
-			(!a&& b&&!c)||( a&&!b&& c)?[-1,-1, 0]:
-			(!a&& b&& c)||( a&&!b&&!c)?[ 1,-1, 0]:
-			[];
-	
-//	echo(a=a,b=b,c=c,quad=quad);
-	
-	translate([Qx,Qy,0])
-		rotate([0,0,Qy>r[1]?-angle:angle])
-			scale([sma,sMa,1]) 
-				intersection() {
-					translate(quad) square(size=[2,2], center=true);
-					circle(r=1);
-				}
+	translate([PQ[0], PQ[1], 0])
+		rotate([0, 0, angle])
+			intersection() {
+				translate(circle1[0])
+					circle(r = circle1[1]);
+				translate(circle2[0])
+					circle(r = circle2[1]);
+			}
 }

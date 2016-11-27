@@ -28,20 +28,25 @@ include <clip.h.scad>
 include <axle.h.scad>
 include <finger.h.scad>
 include <thumb.h.scad>
+include <math.scad>
 
 // Constants
 constants = 
 	let(dInnerM2 = 2.03,
+		dOuterM2 = 4,
 		dInnerM3 = 3.2,
 		dOuterM3 = 6.0,
 		dVia = 0.99,
 		rInnerM2 = dInnerM2/2,
+		rOuterM2 = dOuterM2/2,
 		rInnerM3 = dInnerM3/2,
 		rOuterM3 = dOuterM3/2,
 		rVia = dVia/2)
 	constants(
 		nozzleWidth = 0.25,
 		clearance = 0.1,
+		rInnerM2 = rInnerM2,
+		rOuterM2 = rOuterM2,
 		rInnerM3 = rInnerM3,
 		rOuterM3 = rOuterM3,
 		rEdgeRimM3 = 0.34,
@@ -218,12 +223,50 @@ lib_finger_carrier =
 	);
 
 // Thumb
+/* Thumb down key information.
+ *          |
+ *        D_|
+ *        / \
+ *       /  |\        
+ *      /   | \ 
+ *    E\    |  \
+ *      \   |   \
+ *       |  |    \
+ *       |  |     |C
+ *       |  |    /
+ *       |  |   /
+ *       |  |  /B
+ *       |  |  |
+ *       |__|__|
+ *       F  O  A
+ *          |
+ */
+lib_thumb_downKey =
+	let(
+		A = [-7.75, 0],
+		B = [-7.75, 13],
+		C = [-11.75, 27],
+		D = [4, 61],
+		E = [8.75, 29],
+		F = [7.75, 0]
+	)
+	thumb_downKey(
+		axle = lib_axle_15x12,
+		points = [A, B, C, D, E, F],
+		rCD = 5.4,
+		rDE = 2.4,
+		h = 3,
+		color = "RoyalBlue"
+	);
+
 lib_thumb_sidePlacementInfo = 
 	thumb_sidePlacementInfo(
-		ledFrontOffset = 3.00,
+//		ledFrontOffset = 3.00,
+		ledFrontOffset = 3.50,
 		ledGapDistance = 8.08,
 		holeFrontOffset = 2.34,
-		holeBackOffset = 20.98,
+//		holeBackOffset = 20.98,
+		holeBackOffset = 16.0,
 		holeSideOffset = 7.92
 	);
 	
@@ -234,64 +277,41 @@ lib_thumb_downPlacementInfo =
 	);
 
 lib_thumb_placementInfo =
-	let(
-		oKeyA = [7.98, -16.00],
-		oKeyB = [-10.00, -14.00],
-		oKeyC = [9.50, 9.98],
-		oKeyD = [-19.99, 5.99],
-		aKeyA = 14,
-		aKeyB = 160,
-		aKeyC = 0,
-		aKeyD = 170	
+	let(leverClearance = constants_calcLeverClearance(constants),
+		points = thumb_downKey_getPoints(lib_thumb_downKey),
+		rKeyA = thumb_downKey_getRDE(lib_thumb_downKey),
+		rKeyB = thumb_downKey_getRCD(lib_thumb_downKey),
+	
+		C = points[2],
+		D = points[3],
+		E = points[4],
+		F = points[5],
+
+		CD = pointBetween(C, D),
+		DE = pointBetween(D, E),
+		EF = pointBetween(E, F),
+
+		angleA = lineXRotation(D, E),
+		angleB = lineXRotation(C, D),
+		angleC = 180 + lineXRotation(E, F),
+		angleD = 90,
+
+		distanceA = rKeyA + leverClearance*2,
+		distanceB = rKeyB + leverClearance*2,
+		distanceC = leverClearance*2,
+		distanceD = rKeyB + leverClearance*2,
+		
+		originA = [DE[0] - distanceA*cos(90 - angleA), DE[1] - distanceA*sin(90 - angleA)],
+		originB = [CD[0] - distanceB*cos(90 - angleB), CD[1] + distanceB*sin(90 - angleB)],
+		originC = [EF[0] - distanceC*cos(90 - angleC), EF[1] + distanceC*sin(90 - angleC)],
+		originD = [ C[0] - distanceD*cos(90 - angleD),  C[1] - distanceD*sin(90 - angleD)]
 	)
 	thumb_placement(
 		sideInfo = lib_thumb_sidePlacementInfo,
 		downInfo = lib_thumb_downPlacementInfo,
 		downOrigin = [0, 0],
-		sideOrigins = thumb_vector(oKeyA, oKeyB, oKeyC, oKeyD),
-		sideAngles = thumb_vector(aKeyA, aKeyB, aKeyC, aKeyD)
-	);
-	
-lib_thumb_pcb =
-	let(
-		A=[-22.06, 20.55],
-		B=[33.10, 20.52],
-		C=[33.10, -28.10],
-		D=[0.07, -28.10],
-		E=[-46.50, -22.55],
-		F=[-46.50, 2.27],
-		M1 = [-0.06, -23.08, 0],
-		M2 = [27.85, -4.95, 0],
-		M3 = [-13.04, 17.28, 0],
-		M4 = [-29.40, -9.30, 0]
-	)
-	thumb_pcb(
-		constants = constants,
-		placement = lib_thumb_placementInfo,
-		ledPair = lib_led_pair,
-		points = [A, B, C, D, E, F],
-		mountHoleLocations = [M1, M2, M3, M4],
-		h = 1.6,
-
-		color = "Green"
-	);
-	
-lib_thumb_downKey =
-	let(
-		A = [6, 0],
-		B = [6, 12],
-		C = [9.5, 23],
-		D = [-1.5, 48],
-		E = [-7, 32],
-		F = [-6.5, 24],
-		G = [-6, 16],
-		H = [-6, 0]
-	)
-	thumb_downKey(
-		axle = lib_axle_15x12,
-		points = [A, B, C, D, E, F, G, H],
-		h = 3,
-		color = "RoyalBlue"
+		sideOrigins = thumb_vector(originA, originB, originC, originD),
+		sideAngles = thumb_vector(angleA, angleB, angleC, angleD)
 	);
 		
 lib_thumb_downCarrier =
@@ -309,18 +329,67 @@ lib_thumb_downCarrier =
 		color = "LightSteelBlue"
 	);
 
-lib_thumb_sideKey =
+lib_thumb_key =
 	thumb_key(
+		placement = lib_thumb_placementInfo,
 		h = 15,
+		d = 3,
+		
 		color = "RoyalBlue"
 	);
-	
+
 lib_thumb_upKey = 
 	thumb_upKey(
-		d = 0,
-		wTop = 8,
-		h = 15,
-		h2 = 10
+		hNeck = 10,
+		aNeck = 45,
+		wTop = 13
 	);	
 
-lib_thumb_anvil = [];
+lib_thumb_sideCarrier = 
+	thumb_sideCarrier(
+		constants = constants,
+		placement = lib_thumb_sidePlacementInfo,
+		ledPair = lib_led_pair,
+		magnet = lib_magnet_5x4x1,
+		sClip = lib_s_clip,
+		axle = lib_axle_15x12,
+		key = lib_thumb_key,
+		upKey = lib_thumb_upKey,
+		downKey = lib_thumb_downKey,
+		
+		angle = 60,
+		
+		color = "LightSteelBlue"
+	);
+	
+lib_thumb_pcb =
+	let(
+//		A=[-22.06, -20.55],
+//		B=[33.10, -20.52],
+//		C=[33.10, 28.10],
+//		D=[0.07, 28.10],
+//		E=[-46.50, 22.55],
+//		F=[-46.50, -2.27],
+		A=[-38, -20],
+		B=[30, -20],
+		C=[30, 40],
+		D=[-38, 40],
+		E=[-38, 5],
+		F=[-10, -20],
+		M1 = [-0.06, 23.08, 0],
+		M2 = [27.85, 4.95, 0],
+		M3 = [-13.04, -17.28, 0],
+		M4 = [-29.40, 9.30, 0]
+	)
+	thumb_pcb(
+		constants = constants,
+		downCarrier = lib_thumb_downCarrier,
+		sideCarrier = lib_thumb_sideCarrier,
+		placement = lib_thumb_placementInfo,
+		ledPair = lib_led_pair,
+		points = [A, B, C, D, E, F],
+		mountHoleLocations = [M1, M2, M3, M4],
+		h = 1.6,
+
+		color = "Green"
+	);

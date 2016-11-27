@@ -21,6 +21,7 @@
 
 // This is the thumb header scad file containing all object definitions and calculations related to the thumb.
 include <utility.scad>
+include <lib.h.scad>
 include <axle.h.scad>
 include <led.h.scad>
 
@@ -90,12 +91,14 @@ function thumb_placement_getSideAngle(this, thumbKey) = thumb_vector_get(get(thi
 
 /* Thumb PCB information */
 // Constructor
-function thumb_pcb(constants, placement, ledPair, downKey, points, mountHoleLocations, h, color) = [
-	e("constants", constants), e("placement", placement), e("ledPair", ledPair),
-	e("points", points), e("mountHoleLocations", mountHoleLocations), e("h", h), e("color", color)];
+function thumb_pcb(constants, downCarrier, sideCarrier, placement, ledPair, downKey, points, mountHoleLocations, h, color) = [
+	e("constants", constants), e("downCarrier", downCarrier), e("sideCarrier", sideCarrier), e("placement", placement), 
+	e("ledPair", ledPair), e("points", points), e("mountHoleLocations", mountHoleLocations), e("h", h), e("color", color)];
 
 // Accessors
 function thumb_pcb_getConstants(this) = get(this, "constants");
+function thumb_pcb_getDownCarrier(this) = get(this, "downCarrier");
+function thumb_pcb_getSideCarrier(this) = get(this, "sideCarrier");
 function thumb_pcb_getPlacement(this) = get(this, "placement");
 function thumb_pcb_getLedPair(this) = get(this, "ledPair");
 function thumb_pcb_getPoints(this) = get(this, "points");
@@ -124,12 +127,14 @@ function thumb_pcb_getColor(this) = get(this, "color");
  *          |
  */
 // Constructor
-function thumb_downKey(axle, points, h, color) = [
-	e("axle", axle), e("points", points), e("h", h), e("color", color)];
+function thumb_downKey(axle, points, rCD, rDE, h, color) = [
+	e("axle", axle), e("points", points), e("rCD", rCD), e("rDE", rDE), e("h", h), e("color", color)];
 
 // Accessors
 function thumb_downKey_getAxle(this) = get(this, "axle");
 function thumb_downKey_getPoints(this) = get(this, "points");
+function thumb_downKey_getRCD(this) = get(this, "rCD");
+function thumb_downKey_getRDE(this) = get(this, "rDE");
 function thumb_downKey_getH(this) = get(this, "h");
 function thumb_downKey_getColor(this) = get(this, "color");
 
@@ -270,34 +275,177 @@ function thumb_downCarrier_calcMaxRotation(this) =
 
 /* Thumb side key information. */
 // Constructor
-function thumb_key(h, color) = [
-	e("h", h), e("color", color)];
+function thumb_key(placement, h, d, w, color) = [
+	e("placement", placement), e("h", h), e("d", d), e("w", w), e("color", color)];
 
 // Accessor
+function thumb_key_getPlacement(this) = get(this, "placement");
 function thumb_key_getH(this) = get(this, "h");
+function thumb_key_getD(this) = get(this, "d");
 function thumb_key_getColor(this) = get(this, "color");
 /*******/
 
 
-/* Thumb up key inforation.
- *   <   d    >
+/* Thumb up key information.
  *       _ _ _
- *  ^   / _ __|
- *  h2 / /
+ *      / _ __|
+ *hNeck/ /
  *    / /
- *  v/ / <wTop>
+ *   / / <wTop>
  *  ^| |
  *  h| |
  *  v| |
  */
 // Constructor
-function thumb_upKey(d, wTop, h, h2) = [
-	e("d", d), e("wTop", wTop), e("h", h), e("h2", h2)];
+function thumb_upKey(hNeck, aNeck, wTop) = [
+	e("hNeck", hNeck), e("aNeck", aNeck), e("wTop", wTop)];
 
 // Accessors
-function thumb_upKey_getD(this) = get(this, "d");
+function thumb_upKey_getHNeck(this) = get(this, "hNeck");
+function thumb_upKey_getANeck(this) = get(this, "aNeck");
 function thumb_upKey_getWTop(this) = get(this, "wTop");
-function thumb_upKey_getH(this) = get(this, "h");
-function thumb_upKey_getH2(this) = get(this, "h2");
 /*******/
 
+
+/* Thumb anvil information */
+// Constructor
+function thumb_sideCarrier(constants, placement, ledPair, magnet, sClip, axle, key, upKey, downKey, angle, color) = [
+	e("constants", constants), e("placement", placement), e("ledPair", ledPair), e("magnet", magnet),
+	e("sClip", sClip), e("axle", axle), e("key", key), e("upKey", upKey), e("downKey", downKey),
+	e("angle", angle), e("color", color)];
+
+// Accessors
+function thumb_sideCarrier_getConstants(this) = get(this, "constants");
+function thumb_sideCarrier_getPlacement(this) = get(this, "placement");
+function thumb_sideCarrier_getLedPair(this) = get(this, "ledPair");
+function thumb_sideCarrier_getMagnet(this) = get(this, "magnet");
+function thumb_sideCarrier_getSClip(this) = get(this, "sClip");
+function thumb_sideCarrier_getAxle(this) = get(this, "axle");
+function thumb_sideCarrier_getKey(this) = get(this, "key");
+function thumb_sideCarrier_getUpKey(this) = get(this, "upKey");
+function thumb_sideCarrier_getDownKey(this) = get(this, "downKey");
+function thumb_sideCarrier_getAngle(this) = get(this, "angle");
+function thumb_sideCarrier_getColor(this) = get(this, "color");
+
+// Calculations
+function thumb_sideCarrier_calcW(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		placement = thumb_sideCarrier_getPlacement(this),
+		rOuterM2 = constants_getROuterM2(constants),
+		holeSideOffset = thumb_sidePlacementInfo_getHoleSideOffset(placement))
+	holeSideOffset*2 + rOuterM2*2;
+
+function thumb_sideCarrier_calcD(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		placement = thumb_sideCarrier_getPlacement(this),
+		rOuterM2 = constants_getROuterM2(constants),
+		holeBackOffset = thumb_sidePlacementInfo_getHoleBackOffset(placement))
+	holeBackOffset + rOuterM2;
+	
+function thumb_sideCarrier_calcH(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		ledPair = thumb_sideCarrier_getLedPair(this),
+		tWall = constants_calcTWall(constants),
+		hLed = led_pair_getH(ledPair))
+	hLed + 2*tWall;
+	
+function thumb_sideCarrier_calcWFront(this) =
+	let(placement = thumb_sideCarrier_getPlacement(this),
+		holeFrontOffset = thumb_sidePlacementInfo_getHoleFrontOffset(placement))
+	holeFrontOffset * 4;
+
+function thumb_sideCarrier_calcWBack(this) =
+	let(placement = thumb_sideCarrier_getPlacement(this),
+		holeFrontOffset = thumb_sidePlacementInfo_getHoleFrontOffset(placement))
+	holeFrontOffset * 2;
+
+function thumb_sideCarrier_calcWTower(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		axle = thumb_sideCarrier_getAxle(this),
+		tWall = constants_calcTWall(constants),
+		wAxle = axle_getW(axle))
+	wAxle + tWall*3;
+
+function thumb_sideCarrier_calcDTower(this) =
+	let(w = thumb_sideCarrier_calcW(this),
+		d = thumb_sideCarrier_calcD(this),
+		wFront = thumb_sideCarrier_calcWFront(this),
+		wBack = thumb_sideCarrier_calcWBack(this),
+		wTower = thumb_sideCarrier_calcWTower(this),
+		x = (w - wBack) / 2,
+		y = d - wFront,
+		dx = (wTower - wBack) / 2)
+	d - (y / (x / dx));
+
+function thumb_sideCarrier_calcAxleFrontOffset(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		axle = thumb_sideCarrier_getAxle(this),
+		tWall = constants_calcTWall(constants),
+		rAxle = axle_getR(axle),
+		dTower = thumb_sideCarrier_calcDTower(this))
+	dTower - rAxle*2 - tWall*2;
+
+function thumb_sideCarrier_calcAxleBottomOffset(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		magnet = thumb_sideCarrier_getMagnet(this),
+		axle = thumb_sideCarrier_getAxle(this),
+		sClip = thumb_sideCarrier_getSClip(this),
+		tWall = constants_calcTWall(constants),
+		clearance = constants_getClearance(constants),
+		hMagnet = magnet_getH(magnet),
+		rAxle = axle_getR(axle),
+		tClip = clip_getT(sClip))
+	tWall + hMagnet + tClip + rAxle*2 + clearance;
+
+function thumb_sideCarrier_calcLensBottomOffset(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		ledPair = thumb_sideCarrier_getLedPair(this),
+		tWall = constants_calcTWall(constants),
+		hLed = led_pair_getH(ledPair),
+		lensTopOffset = led_pair_getLensTopOffset(ledPair))
+	tWall + hLed - lensTopOffset;
+
+function thumb_sideCarrier_calcWHammer(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		placement = thumb_sideCarrier_getPlacement(this),
+		ledPair = thumb_sideCarrier_getLedPair(this),
+		clearance = constants_getClearance(constants),
+		ledGapDistance = thumb_sidePlacementInfo_getLedGapDistance(placement),
+		dLed = led_pair_getD(ledPair),
+		rLed = led_pair_getR(ledPair))
+	ledGapDistance - dLed - rLed*2 + clearance*2;
+
+function thumb_sideCarrier_calcMaxRotation(this) =
+	let(placement = thumb_sideCarrier_getPlacement(this),
+		ledPair = thumb_sideCarrier_getLedPair(this),
+		ledFrontOffset = thumb_sidePlacementInfo_getLedFrontOffset(placement),
+		axleFrontOffset = thumb_sideCarrier_calcAxleFrontOffset(this),
+		rLed = led_pair_getR(ledPair),
+		s = axleFrontOffset - ledFrontOffset)
+	asin((rLed*2) / s);
+
+function thumb_sideCarrier_calcTStem(this) =
+	let(constants = thumb_sideCarrier_getConstants(this),
+		leverClearance = constants_calcLeverClearance(constants),
+		wHammer = thumb_sideCarrier_calcWHammer(this))
+	wHammer - leverClearance*2;
+
+function thumb_sideCarrier_calcStemFrontOffset(this) =
+	let(key = thumb_sideCarrier_getKey(this),
+		dKey = thumb_key_getD(key))
+	dKey;
+
+function thumb_sideCarrier_calcPoints(this) =
+	let(w = thumb_sideCarrier_calcW(this),
+		d = thumb_sideCarrier_calcD(this),
+		wFront = thumb_sideCarrier_calcWFront(this),
+		wBack = thumb_sideCarrier_calcWBack(this),
+		A = [0, -w/2],
+		B = [wFront, -w/2],
+		C = [d, -wBack/2],
+		D = [d, wBack/2],
+		E = [wFront, w/2],
+		F = [0, w/2]
+	) [A, B, C, D, E, F];
+
+/*******/

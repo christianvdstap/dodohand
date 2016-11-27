@@ -24,12 +24,40 @@ include <utility.scad>
 include <thumb_pcb.scad>
 include <thumb_carrier.scad>
 
-module thumb_assy(pcb, downCarrier, downPosition = "up") {
+module thumb_placeSideCarrier(downCarrier, sideCarrier, angle, origin, key = "A", sidePosition) {
+	translate(origin)
+		rotate([0, 0, angle])
+			thumb_sideCarrier_assy(downCarrier, sideCarrier, key, sidePosition);
+}
+
+module thumb_assy(pcb, downCarrier, sideCarrier, downPosition = "up",
+					sidePositions = thumb_vector("down","down","down","down")) {
+	downKey = thumb_downCarrier_getDownKey(downCarrier);
 	hCarrier = thumb_downCarrier_getH(downCarrier);
+	dCarrier = thumb_downCarrier_calcD(downCarrier);
+	tHinge = thumb_downKey_calcTHinge(downKey);
+	placement = thumb_pcb_getPlacement(pcb);
+						
+	keyIds = thumb_vector("A", "B", "C", "D");
 
 	union() {
 		thumb_pcb_part(pcb, true);
-		translate([0, 0, hCarrier/2 + 0.01])
-			thumb_downCarrier_assy(downCarrier, downPosition);
+		translate([0, 0, 0.01]) {
+			translate([0, 0, hCarrier/2])
+				thumb_downCarrier_assy(downCarrier, downPosition);		
+			translate([0, -dCarrier/2 - tHinge/2, 0]) {
+				for (key = thumb_keys) {
+					angle = thumb_placement_getSideAngle(placement, key);
+					origin = thumb_placement_getSideOrigin(placement, key);
+					keyId = thumb_vector_get(keyIds, key);
+					position = thumb_vector_get(sidePositions, key);
+					thumb_placeSideCarrier(downCarrier, sideCarrier, angle, origin, keyId, position);
+					
+					echo(keyId, angle=angle, origin=origin);
+				}
+			}
+		}
+
 	}
+	
 }

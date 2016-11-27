@@ -24,7 +24,10 @@ include <utility.scad>
 include <lib.h.scad>
 include <led.h.scad>
 
-module viasLedPair2D(constants, ledPair, ledGapDistance) {
+module viasLedPair2D(constants, ledPair, ledGapDistance, withClearance = false) {
+	rawClearance = constants_getClearance(constants);
+	clearance = withClearance ? rawClearance : 0;
+
 	leadDistance = led_pair_getLeadDistance(ledPair);
 	rVia = constants_getRVia(constants);
 	
@@ -34,5 +37,5 @@ module viasLedPair2D(constants, ledPair, ledGapDistance) {
 	mirror2([1, 0, 0])
 		mirror2([0, 1, 0]) 
 			translate([viaGapOffset, viaOffset, 0])
-				circle(r = rVia);
+				circle(r = rVia - clearance/2);
 }
