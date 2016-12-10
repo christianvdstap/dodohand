@@ -170,10 +170,12 @@ module thumb_sideCarrier_innerDetailCut_comb(sideCarrier) {
 	axle = thumb_sideCarrier_getAxle(sideCarrier);
 	magnet = thumb_sideCarrier_getMagnet(sideCarrier);
 	sClip = thumb_sideCarrier_getSClip(sideCarrier);
+	placement = thumb_sideCarrier_getPlacement(sideCarrier);
 	
-	tWall = constants_calcTWall(constants);
 	clearance = constants_getClearance(constants);
 	leverClearance = constants_calcLeverClearance(constants);
+	tWall = constants_calcTWall(constants);
+	rOuterM2 = constants_getROuterM2(constants);
 
 	rAxle = axle_getR(axle);
 	wAxle = axle_getW(axle);
@@ -184,6 +186,9 @@ module thumb_sideCarrier_innerDetailCut_comb(sideCarrier) {
 	hClip = clip_getH(sClip);
 	tClip = clip_getT(sClip);
 	waClip = clip_getWa(sClip);
+	
+	holeFrontOffset = thumb_sidePlacementInfo_getHoleFrontOffset(placement);
+	holeSideOffset = thumb_sidePlacementInfo_getHoleSideOffset(placement);
 	
 	w = thumb_sideCarrier_calcW(sideCarrier);
 	d = thumb_sideCarrier_calcD(sideCarrier);
@@ -211,6 +216,10 @@ module thumb_sideCarrier_innerDetailCut_comb(sideCarrier) {
 		thumb_sideCarrier_axle_place(sideCarrier)
 			rotate([0, 90, 0])
 				ccylinder(r = rAxle + clearance/2, h = w);
+		// Make room fro the screw heads
+		mirror2([1, 0, 0])
+			translate([holeSideOffset, holeFrontOffset, 0])
+				cylinder(r = rOuterM2 + clearance/2, h = h*2);
 	}
 }
 
