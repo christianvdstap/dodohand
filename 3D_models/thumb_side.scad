@@ -27,6 +27,47 @@ include <thumb.h.scad>
 include <led_pair.scad>
 include <thumb_carrier.scad>
 
+module thumb_sideCarrier_led_place(sideCarrier) {
+	constants = thumb_sideCarrier_getConstants(sideCarrier);
+	placement = thumb_sideCarrier_getPlacement(sideCarrier);
+	ledPair = thumb_sideCarrier_getLedPair(sideCarrier);
+	
+	tWall = constants_calcTWall(constants);
+
+	hLed = led_pair_getH(ledPair);
+	dLed = led_pair_getD(ledPair);
+	lensTopOffset = led_pair_getLensTopOffset(ledPair);
+	
+	ledFrontOffset = thumb_sidePlacementInfo_getLedFrontOffset(placement);
+	ledGapDistance = thumb_sidePlacementInfo_getLedGapDistance(placement);
+	
+	translate([ledGapDistance/2 - dLed/2, ledFrontOffset, hLed - lensTopOffset + tWall])
+		children();
+}
+
+module thumb_sideCarrier_axle_place(sideCarrier) {
+	axleFrontOffset = thumb_sideCarrier_calcAxleFrontOffset(sideCarrier);
+	axleBottomOffset = thumb_sideCarrier_calcAxleBottomOffset(sideCarrier);
+
+	translate([0, axleFrontOffset, axleBottomOffset])
+		children();
+}
+
+module thumb_sideCarrier_clip_place(sideCarrier) {
+	constants = thumb_sideCarrier_getConstants(sideCarrier);
+	sClip = thumb_sideCarrier_getSClip(sideCarrier);
+	
+	clearance = constants_getClearance(constants);
+	rOuter = clip_calcROuter(sClip);
+	tClip = clip_getT(sClip);
+	
+	axleFrontOffset = thumb_sideCarrier_calcAxleFrontOffset(sideCarrier);
+
+	translate([0, -axleFrontOffset + tClip, -rOuter - clearance])
+		rotate([90, 0, -90])
+			children();
+}
+
 module thumb_sideCarrier_base_comb(sideCarrier) {
 	constants = thumb_sideCarrier_getConstants(sideCarrier);
 
@@ -59,11 +100,12 @@ module thumb_sideCarrier_innerCut_comb(sideCarrier, withClearance = false) {
 	ledPair = thumb_sideCarrier_getLedPair(sideCarrier);
 	axle = thumb_sideCarrier_getAxle(sideCarrier);
 	magnet = thumb_sideCarrier_getMagnet(sideCarrier);
+	sClip = thumb_sideCarrier_getSClip(sideCarrier);
 	
 	tWall = constants_calcTWall(constants);
 	rawClearance = constants_getClearance(constants);
 	clearance = withClearance ? rawClearance : 0;
-	leverClearance = constants_calcLeverClearance();
+	leverClearance = constants_calcLeverClearance(constants);
 	
 	ledFrontOffset = thumb_sidePlacementInfo_getLedFrontOffset(placement);
 	ledGapDistance = thumb_sidePlacementInfo_getLedGapDistance(placement);
@@ -75,7 +117,9 @@ module thumb_sideCarrier_innerCut_comb(sideCarrier, withClearance = false) {
 	rAxle = axle_getR(axle);
 	wAxle = axle_getW(axle);
 	
-	dMagnet = magnet_getH(magnet);
+	hMagnet = magnet_getH(magnet);
+	
+	tClip = clip_getT(sClip);
 	
 	w = thumb_sideCarrier_calcW(sideCarrier);
 	d = thumb_sideCarrier_calcD(sideCarrier);
@@ -88,16 +132,19 @@ module thumb_sideCarrier_innerCut_comb(sideCarrier, withClearance = false) {
 
 	difference() {
 		// Base shape
-		translate([0, dTower/2, tWall + dMagnet - clearance])
-			ccube([wTower + clearance*2, dTower + clearance*2, h], hCenter = true);
+		translate([0, dTower/2, tWall + hMagnet - clearance])
+				ccube([wTower + clearance*2, dTower + clearance*2, h], hCenter = true);			
 		// Pillars for leds
 		mirror2([1, 0, 0]) {
-			//-w/2 + ledFrontOffset + wLed/2 + tWall
 			translate([ledGapDistance/2 - rLed/2, ledFrontOffset, h/2])
 				ccube([dLed + rLed - clearance*2, wLed + tWall*2 + rawClearance*2 - clearance*2, h*2]);
 			thumb_sideCarrier_led_place(sideCarrier)
 				rotate([0, -90, 0])
-					cylinder(r = rLed*1.5, h = dLed + rLed + leverClearance);
+					cylinder(r = rLed*1.5, h = dLed/2 + leverClearance - rawClearance - clearance);
+			// Extra cut for the lens cutout such that the parts can slide onto eachother
+			translate([ledGapDistance/2 - dLed/2, ledFrontOffset, hMagnet])
+				ccube([dLed + leverClearance*2 - rawClearance*2 - clearance*2, rLed*3 + rawClearance*2 - clearance*2, 
+						tWall + tClip + rawClearance - clearance], hCenter = true);
 		}
 		
 		// Pillars for axle retainers
@@ -105,24 +152,6 @@ module thumb_sideCarrier_innerCut_comb(sideCarrier, withClearance = false) {
 			translate([w/2 + wTower/2 - (wTower - wAxle)/2 + clearance, d/2 + axleFrontOffset - rAxle - tWall*2 + clearance, h/2])
 				ccube([w, d, h*2]);
 	}
-}
-
-module thumb_sideCarrier_led_place(sideCarrier) {
-	constants = thumb_sideCarrier_getConstants(sideCarrier);
-	placement = thumb_sideCarrier_getPlacement(sideCarrier);
-	ledPair = thumb_sideCarrier_getLedPair(sideCarrier);
-	
-	tWall = constants_calcTWall(constants);
-
-	hLed = led_pair_getH(ledPair);
-	dLed = led_pair_getD(ledPair);
-	lensTopOffset = led_pair_getLensTopOffset(ledPair);
-	
-	ledFrontOffset = thumb_sidePlacementInfo_getLedFrontOffset(placement);
-	ledGapDistance = thumb_sidePlacementInfo_getLedGapDistance(placement);
-	
-	translate([ledGapDistance/2 - dLed/2, ledFrontOffset, hLed - lensTopOffset + tWall])
-		children();
 }
 
 module thumb_sideCarrier_outerDetailCut_comb(sideCarrier) {
@@ -155,14 +184,6 @@ module thumb_sideCarrier_outerDetailCut_comb(sideCarrier) {
 		translate([0, dMagnet/2 + tWall, tWall])
 			ccube([wMagnet, dMagnet, h], hCenter = true);
 	}
-}
-
-module thumb_sideCarrier_axle_place(sideCarrier) {
-	axleFrontOffset = thumb_sideCarrier_calcAxleFrontOffset(sideCarrier);
-	axleBottomOffset = thumb_sideCarrier_calcAxleBottomOffset(sideCarrier);
-
-	translate([0, axleFrontOffset, axleBottomOffset])
-		children();
 }
 
 module thumb_sideCarrier_innerDetailCut_comb(sideCarrier) {
@@ -216,26 +237,11 @@ module thumb_sideCarrier_innerDetailCut_comb(sideCarrier) {
 		thumb_sideCarrier_axle_place(sideCarrier)
 			rotate([0, 90, 0])
 				ccylinder(r = rAxle + clearance/2, h = w);
-		// Make room fro the screw heads
+		// Make room for the screw heads
 		mirror2([1, 0, 0])
-			translate([holeSideOffset, holeFrontOffset, 0])
+			translate([holeSideOffset, holeFrontOffset, tWall + hMagnet + tClip])
 				cylinder(r = rOuterM2 + clearance/2, h = h*2);
 	}
-}
-
-module thumb_sideCarrier_clip_place(sideCarrier) {
-	constants = thumb_sideCarrier_getConstants(sideCarrier);
-	sClip = thumb_sideCarrier_getSClip(sideCarrier);
-	
-	clearance = constants_getClearance(constants);
-	rOuter = clip_calcROuter(sClip);
-	tClip = clip_getT(sClip);
-	
-	axleFrontOffset = thumb_sideCarrier_calcAxleFrontOffset(sideCarrier);
-
-	translate([0, -axleFrontOffset + tClip, -rOuter - clearance])
-		rotate([90, 0, -90])
-			children();
 }
 
 module thumb_sideCarrier_hammer_comb(downCarrier, sideCarrier) {

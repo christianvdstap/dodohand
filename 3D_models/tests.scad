@@ -31,6 +31,9 @@ $fn=64;
 
 //finger_assy(lib_fingerPcb, lib_finger_carrier, lib_guard);
 //finger_single_assy(lib_finger_carrier,  ["up", "up", "down", "up", "down"]);
-thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, lib_thumb_sideCarrier, "down",	thumb_vector("down", "down", "down", "down"));
+//thumb_assy(lib_thumb_pcb, lib_thumb_downCarrier, lib_thumb_sideCarrier, "down",	thumb_vector("down", "down", "down", "down"));
 //thumb_pcb_fit_part(lib_thumb_pcb, true);
-//thumb_sideCarrier_assy(lib_thumb_downCarrier, lib_thumb_sideCarrier);
+thumb_sideCarrier_assy(lib_thumb_downCarrier, lib_thumb_sideCarrier, "A", "up");
+
+
+//thumb_sideCarrier_hammer_part(lib_thumb_downCarrier, lib_thumb_sideCarrier, true, "A");

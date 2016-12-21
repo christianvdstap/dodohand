@@ -44,7 +44,7 @@ constants =
 		rVia = dVia/2)
 	constants(
 		nozzleWidth = 0.25,
-		clearance = 0.1,
+		clearance = 0.15,
 		rInnerM2 = rInnerM2,
 		rOuterM2 = rOuterM2,
 		rInnerM3 = rInnerM3,
